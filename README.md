@@ -16,8 +16,6 @@ Open `http://127.0.0.1:8000` in your browser.
 
 Push to `main`. The GitHub Actions workflow builds and deploys to GitHub Pages automatically.
 
-After the first push, enable GitHub Pages in the repo settings:
-**Settings > Pages > Source > GitHub Actions**.
 
 ## Project Structure
 
