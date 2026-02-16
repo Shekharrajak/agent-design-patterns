@@ -42,7 +42,6 @@ mindmap
 ```mermaid
 graph TB
     subgraph TRADITIONAL["Traditional Distributed System"]
-        direction TB
         TC["Client"] --> TLB["Load Balancer"]
         TLB --> TS1["Service A"]
         TLB --> TS2["Service B"]
@@ -52,7 +51,6 @@ graph TB
     end
 
     subgraph AGENTIC["Agent-Enhanced Distributed System"]
-        direction TB
         AC["Client"] --> AR["Agent Router<br/>classifies intent"]
         AR --> AA1["Agent A<br/>plans + tools"]
         AR --> AA2["Agent B<br/>plans + tools"]

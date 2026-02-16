@@ -40,23 +40,16 @@ graph TD
 ## Traditional Orchestration vs Agent Orchestration
 
 ```mermaid
-graph LR
+graph TD
     subgraph TRAD["Traditional: Hardcoded Saga"]
-        direction TB
-        T1["Step 1: Reserve inventory"] --> T2["Step 2: Charge payment"]
-        T2 --> T3["Step 3: Ship order"]
-        T3 --> T4["Step 4: Send confirmation"]
-        T_NOTE["Fixed sequence<br/>Every edge case<br/>explicitly coded"]
+        T1["Step 1: Reserve inventory"] --> T2["Step 2: Charge payment"] --> T3["Step 3: Ship order"] --> T4["Step 4: Send confirmation"]
     end
 
     subgraph AGENT["Agent: Dynamic Orchestration"]
-        direction TB
-        A1["Agent reads order context"]
-        A1 --> A2{"Decide next action<br/>based on state"}
+        A1["Agent reads order context"] --> A2{"Decide next action<br/>based on state"}
         A2 -->|"stock low"| A3["Find alternative supplier"]
         A2 -->|"payment failed"| A4["Retry with backup method"]
         A2 -->|"all good"| A5["Standard fulfillment"]
-        A_NOTE["Adapts to conditions<br/>Handles novel scenarios<br/>without new code"]
     end
 
     style TRAD fill:#f5f5f5,stroke:#616161
@@ -178,6 +171,8 @@ graph TD
     ROUTER --> ORCH
     S1 --> VS
     ORCH --> MQ
+    S1 -.-> OBS
+    ORCH -.-> OBS
 
     style NS_AGENTS fill:#bdbdbd,stroke:#212121
     style NS_SERVICES fill:#e0e0e0,stroke:#424242

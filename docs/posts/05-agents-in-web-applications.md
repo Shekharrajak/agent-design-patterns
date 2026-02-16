@@ -16,6 +16,7 @@ graph TD
         UI["UI Layer<br/>React / Next.js"]
         STREAM["Streaming Response Handler<br/>Server-Sent Events / WebSocket"]
         STATE["Client State<br/>Agent conversation history"]
+        UI --- STATE
     end
 
     subgraph BACKEND["Backend"]
@@ -128,8 +129,7 @@ graph TD
 ```mermaid
 graph LR
     subgraph SYNC["Synchronous (blocking)"]
-        REQ1["Request"] --> AGENT1["Agent<br/>runs inline"] --> RES1["Response"]
-        NOTE1["Acceptable for < 5s tasks"]
+        REQ1["Request"] --> AGENT1["Agent<br/>runs inline"] --> RES1["Response<br/>Acceptable for under 5s tasks"]
     end
 
     subgraph ASYNC["Asynchronous (non-blocking)"]
@@ -178,17 +178,14 @@ No tool call executes without an audit trail.
 ## Frontend Patterns for Agent UIs
 
 ```mermaid
-graph TB
-    subgraph PATTERNS["UI Patterns for Agentic Interfaces"]
-        direction TB
-        P1["Streaming Text<br/>──────<br/>Token-by-token display<br/>SSE / WebSocket"]
-        P2["Step Indicator<br/>──────<br/>Show reasoning steps<br/>Planning... Searching... Writing..."]
-        P3["Tool Call Visibility<br/>──────<br/>Show what the agent called<br/>Collapsible detail panels"]
-        P4["Human Checkpoint<br/>──────<br/>Pause for confirmation<br/>before irreversible actions"]
-        P5["Progress + Cancel<br/>──────<br/>Estimated time remaining<br/>Abort button with cleanup"]
-    end
+graph LR
+    P1["Streaming Text<br/>──────<br/>Token-by-token display<br/>SSE / WebSocket"] --> P2["Step Indicator<br/>──────<br/>Show reasoning steps<br/>Planning, Searching, Writing"] --> P3["Tool Call Visibility<br/>──────<br/>Show what the agent called<br/>Collapsible detail panels"] --> P4["Human Checkpoint<br/>──────<br/>Pause for confirmation<br/>before irreversible actions"] --> P5["Progress + Cancel<br/>──────<br/>Estimated time remaining<br/>Abort button with cleanup"]
 
-    style PATTERNS fill:#e0e0e0,stroke:#424242
+    style P1 fill:#f5f5f5,stroke:#616161
+    style P2 fill:#e0e0e0,stroke:#424242
+    style P3 fill:#bdbdbd,stroke:#212121
+    style P4 fill:#9e9e9e,stroke:#000,color:#fff
+    style P5 fill:#616161,stroke:#000,color:#fff
 ```
 
 ---

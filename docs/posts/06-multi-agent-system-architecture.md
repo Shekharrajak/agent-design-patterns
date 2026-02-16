@@ -13,28 +13,23 @@ description: Communication topologies, scaling strategies, state management, and
 ```mermaid
 graph TB
     subgraph STAR["Star / Hub-Spoke"]
-        direction TB
         SH["Hub Agent"] --> SS1["Worker"]
         SH --> SS2["Worker"]
         SH --> SS3["Worker"]
     end
 
     subgraph MESH["Full Mesh"]
-        direction TB
         MA["Agent A"] <--> MB["Agent B"]
         MB <--> MC["Agent C"]
         MA <--> MC
     end
 
     subgraph PIPE["Pipeline"]
-        direction LR
         PA["Agent A"] --> PB["Agent B"] --> PC["Agent C"]
     end
 
     subgraph TREE["Hierarchical Tree"]
-        direction TB
-        TL["Leader"]
-        TL --> TM1["Manager"]
+        TL["Leader"] --> TM1["Manager"]
         TL --> TM2["Manager"]
         TM1 --> TW1["Worker"]
         TM1 --> TW2["Worker"]
@@ -83,28 +78,24 @@ that self-reflection often misses.
 ```mermaid
 graph TD
     subgraph SMALL["Small Scale: In-Process"]
-        S_ORCH["Orchestrator"] --> S_W1["Worker"]
+        S_ORCH["Orchestrator<br/>Same process, shared memory"] --> S_W1["Worker"]
         S_ORCH --> S_W2["Worker"]
-        S_NOTE["Same process<br/>Function calls<br/>Shared memory"]
     end
 
     subgraph MEDIUM["Medium Scale: Message Queue"]
-        M_ORCH["Orchestrator"] --> MQ["Message Queue"]
+        M_ORCH["Orchestrator<br/>Separate processes, async"] --> MQ["Message Queue"]
         MQ --> M_W1["Worker Pod"]
         MQ --> M_W2["Worker Pod"]
         MQ --> M_W3["Worker Pod"]
-        M_NOTE["Separate processes<br/>Async messages<br/>Horizontal scaling"]
     end
 
     subgraph LARGE["Large Scale: Distributed Agents"]
-        L_LB["Load Balancer"]
-        L_LB --> L_O1["Orchestrator"]
+        L_LB["Load Balancer<br/>Multi-region, durable execution"] --> L_O1["Orchestrator"]
         L_LB --> L_O2["Orchestrator"]
         L_O1 --> L_MQ["Distributed Queue"]
         L_O2 --> L_MQ
         L_MQ --> L_W["Auto-scaled<br/>Worker Fleet"]
         L_W --> L_STORE["Distributed State Store"]
-        L_NOTE["Multi-region<br/>Durable execution<br/>State externalized"]
     end
 
     SMALL --> MEDIUM --> LARGE
@@ -141,14 +132,7 @@ graph TB
 
 ```mermaid
 graph LR
-    subgraph OPTIONS["State Strategies"]
-        direction TB
-        STATELESS["Stateless Agents<br/>──────<br/>All state in messages<br/>Easy to scale<br/>Limited context"]
-        
-        EXTERNAL["Externalized State<br/>──────<br/>Redis / DynamoDB<br/>Agents read/write shared store<br/>Consistency challenges"]
-        
-        EVENT_SOURCED["Event-Sourced<br/>──────<br/>All agent actions = events<br/>Replay to rebuild state<br/>Full audit trail"]
-    end
+    STATELESS["Stateless Agents<br/>──────<br/>All state in messages<br/>Easy to scale<br/>Limited context"] --> EXTERNAL["Externalized State<br/>──────<br/>Redis / DynamoDB<br/>Agents read/write shared store<br/>Consistency challenges"] --> EVENT_SOURCED["Event-Sourced<br/>──────<br/>All agent actions = events<br/>Replay to rebuild state<br/>Full audit trail"]
 
     style STATELESS fill:#f5f5f5,stroke:#616161
     style EXTERNAL fill:#e0e0e0,stroke:#424242

@@ -73,16 +73,14 @@ graph LR
 Mitigation strategies:
 
 ```mermaid
-graph TD
-    subgraph MITIGATIONS[""]
-        M1["Verification gates<br/>after every step"]
-        M2["Minimize step count<br/>fewer steps = fewer failures"]
-        M3["Self-correction loops<br/>detect and retry"]
-        M4["Ground truth anchors<br/>test results, API responses"]
-        M5["Graceful degradation<br/>partial results > no results"]
-    end
+graph LR
+    M1["Verification gates<br/>after every step"] --> M2["Minimize step count<br/>fewer steps = fewer failures"] --> M3["Self-correction loops<br/>detect and retry"] --> M4["Ground truth anchors<br/>test results, API responses"] --> M5["Graceful degradation<br/>partial results over no results"]
 
-    style MITIGATIONS fill:#e0e0e0,stroke:#424242
+    style M1 fill:#f5f5f5,stroke:#616161
+    style M2 fill:#e0e0e0,stroke:#424242
+    style M3 fill:#bdbdbd,stroke:#212121
+    style M4 fill:#9e9e9e,stroke:#000,color:#fff
+    style M5 fill:#616161,stroke:#000,color:#fff
 ```
 
 ---
@@ -90,20 +88,16 @@ graph TD
 ## 2. Evaluation: The Unsolved Problem
 
 ```mermaid
-graph TD
+graph LR
     subgraph TRAD["Traditional Software Testing"]
-        direction LR
-        TI["Input"] --> TF["Function"] --> TO["Output"]
-        TC["Assert output == expected"]
+        TI["Input"] --> TF["Function"] --> TO["Output<br/>Assert output == expected"]
     end
 
     subgraph AGENT["Agent Evaluation"]
-        direction LR
         AI["Input"] --> AF["Agent<br/>variable path"]
         AF --> AO1["Output A"]
         AF --> AO2["Output B"]
         AF --> AO3["Output C"]
-        AC["Which output is 'correct'?<br/>Was the path efficient?<br/>Were the right tools used?"]
     end
 
     style TRAD fill:#f5f5f5,stroke:#616161
@@ -121,18 +115,14 @@ graph TD
 
 ```mermaid
 graph LR
-    subgraph EVAL_APPROACHES["Evaluation Approaches"]
-        E1["Unit Tests<br/>on individual tools"]
-        E2["End-to-End Evals<br/>task completion rate"]
-        E3["Trajectory Evals<br/>score each step"]
-        E4["Human Judges<br/>expert review"]
-        E5["LLM-as-Judge<br/>automated scoring"]
-    end
+    E1["Unit Tests<br/>on individual tools"] --> E2["End-to-End Evals<br/>task completion rate"] --> E3["Trajectory Evals<br/>score each step"] --> E4["Human Judges<br/>expert review"]
+    E3 --> E5["LLM-as-Judge<br/>automated scoring"]
 
-    E1 --> E2 --> E3 --> E4
-    E3 --> E5
-
-    style EVAL_APPROACHES fill:#e0e0e0,stroke:#424242
+    style E1 fill:#f5f5f5,stroke:#616161
+    style E2 fill:#e0e0e0,stroke:#424242
+    style E3 fill:#bdbdbd,stroke:#212121
+    style E4 fill:#9e9e9e,stroke:#000,color:#fff
+    style E5 fill:#9e9e9e,stroke:#000,color:#fff
 ```
 
 ---
@@ -140,24 +130,18 @@ graph LR
 ## 3. Cost: The Hidden Multiplier
 
 ```mermaid
-graph TD
-    subgraph VISIBLE["Visible Cost"]
-        VC["LLM API tokens<br/>billed per request"]
-    end
+graph LR
+    VC["Visible Cost<br/>──────<br/>LLM API tokens<br/>billed per request"] --> HC1["Planning calls<br/>before execution"] --> HC2["Reflection loops<br/>re-processing output"] --> HC3["Failed attempts<br/>retries and fallbacks"]
 
-    subgraph HIDDEN["Hidden Costs"]
-        HC1["Planning calls<br/>before execution"]
-        HC2["Reflection loops<br/>re-processing output"]
-        HC3["Failed attempts<br/>retries and fallbacks"]
-        HC4["Memory retrieval<br/>embedding + search"]
-        HC5["Tool execution<br/>compute, API fees"]
-        HC6["Observability<br/>logging, storage"]
-    end
+    VC --> HC4["Memory retrieval<br/>embedding + search"] --> HC5["Tool execution<br/>compute, API fees"] --> HC6["Observability<br/>logging, storage"]
 
-    VISIBLE --- HIDDEN
-
-    style VISIBLE fill:#f5f5f5,stroke:#616161
-    style HIDDEN fill:#bdbdbd,stroke:#212121
+    style VC fill:#f5f5f5,stroke:#616161
+    style HC1 fill:#e0e0e0,stroke:#424242
+    style HC2 fill:#e0e0e0,stroke:#424242
+    style HC3 fill:#e0e0e0,stroke:#424242
+    style HC4 fill:#bdbdbd,stroke:#212121
+    style HC5 fill:#bdbdbd,stroke:#212121
+    style HC6 fill:#bdbdbd,stroke:#212121
 ```
 
 A single user request can trigger 10-50 LLM calls internally.
@@ -169,25 +153,13 @@ Cost varies 10x between simple and complex inputs for the same agent.
 
 ```mermaid
 graph LR
-    subgraph BUDGET["Latency Breakdown"]
-        direction TB
-        B1["LLM inference<br/>500ms-2s per call"]
-        B2["Tool execution<br/>100ms-10s per tool"]
-        B3["Memory retrieval<br/>50-200ms"]
-        B4["Network overhead<br/>50-100ms per hop"]
-    end
+    B1["LLM inference<br/>500ms - 2s per call"] --> B2["Tool execution<br/>100ms - 10s per tool"] --> B3["Memory retrieval<br/>50 - 200ms"] --> B4["Network overhead<br/>50 - 100ms per hop"] --> TOTAL["TOTAL for 5-step agent<br/>3s - 40s"]
 
-    subgraph TOTAL["Total for 5-step agent"]
-        T1["5 LLM calls: 2.5-10s"]
-        T2["3 tool calls: 0.3-30s"]
-        T3["2 retrievals: 0.1-0.4s"]
-        T4["TOTAL: 3s - 40s"]
-    end
-
-    BUDGET --> TOTAL
-
-    style BUDGET fill:#e0e0e0,stroke:#424242
-    style TOTAL fill:#bdbdbd,stroke:#212121
+    style B1 fill:#f5f5f5,stroke:#616161
+    style B2 fill:#e0e0e0,stroke:#424242
+    style B3 fill:#bdbdbd,stroke:#212121
+    style B4 fill:#9e9e9e,stroke:#000,color:#fff
+    style TOTAL fill:#616161,stroke:#000,color:#fff
 ```
 
 | User Experience | Max Latency | Implication |
@@ -235,24 +207,19 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph PROBLEM["The Problem"]
-        P1["Context window = finite<br/>128K tokens is not infinite"]
-        P2["Vector retrieval = noisy<br/>top-k results may miss key facts"]
-        P3["Summarization = lossy<br/>compressing context loses detail"]
-        P4["Cross-session memory = unsolved<br/>what to remember, what to forget?"]
-    end
+    P1["Context window = finite<br/>128K tokens is not infinite"] --> A1["Hierarchical memory<br/>summary layers at different granularities"]
+    P2["Vector retrieval = noisy<br/>top-k results may miss key facts"] --> A2["Episodic memory<br/>store full interaction episodes"]
+    P3["Summarization = lossy<br/>compressing context loses detail"] --> A3["Working memory management<br/>agent decides what to keep in context"]
+    P4["Cross-session memory = unsolved<br/>what to remember, what to forget?"] --> A4["Memory consolidation<br/>periodic reflection to extract insights"]
 
-    subgraph APPROACHES["Emerging Approaches"]
-        A1["Hierarchical memory<br/>summary layers at different granularities"]
-        A2["Episodic memory<br/>store full interaction episodes"]
-        A3["Working memory management<br/>agent decides what to keep in context"]
-        A4["Memory consolidation<br/>periodic reflection to extract insights"]
-    end
-
-    PROBLEM --> APPROACHES
-
-    style PROBLEM fill:#bdbdbd,stroke:#212121
-    style APPROACHES fill:#e0e0e0,stroke:#424242
+    style P1 fill:#bdbdbd,stroke:#212121
+    style P2 fill:#bdbdbd,stroke:#212121
+    style P3 fill:#bdbdbd,stroke:#212121
+    style P4 fill:#bdbdbd,stroke:#212121
+    style A1 fill:#e0e0e0,stroke:#424242
+    style A2 fill:#e0e0e0,stroke:#424242
+    style A3 fill:#e0e0e0,stroke:#424242
+    style A4 fill:#e0e0e0,stroke:#424242
 ```
 
 ---
@@ -261,40 +228,34 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph TRACE["Agent Trace"]
-        T1["Step 1: Classified as 'data analysis'"]
-        T2["Step 2: Called SQL tool, got 47 rows"]
-        T3["Step 3: Reflected, found missing filter"]
-        T4["Step 4: Re-called SQL tool, got 12 rows"]
-        T5["Step 5: Generated summary"]
-    end
+    T1["Step 1: Classified as data analysis"] --> T2["Step 2: Called SQL tool, got 47 rows"] --> T3["Step 3: Reflected, found missing filter"] --> T4["Step 4: Re-called SQL tool, got 12 rows"] --> T5["Step 5: Generated summary"]
+    T5 --> D1["Why 5 steps instead of 3?"]
+    T5 --> D2["Was the reflection necessary or wasteful?"]
+    T5 --> D3["Would a different model take a better path?"]
+    T5 --> D4["Why did user B get a different result?"]
 
-    subgraph DEBUG["Debugging Questions"]
-        D1["Why did it take 5 steps instead of 3?"]
-        D2["Was the reflection necessary or wasteful?"]
-        D3["Would a different model take a better path?"]
-        D4["Why did user B get a different result than user A?"]
-    end
-
-    TRACE --> DEBUG
-
-    style TRACE fill:#e0e0e0,stroke:#424242
-    style DEBUG fill:#bdbdbd,stroke:#212121
+    style T1 fill:#e0e0e0,stroke:#424242
+    style T2 fill:#e0e0e0,stroke:#424242
+    style T3 fill:#e0e0e0,stroke:#424242
+    style T4 fill:#e0e0e0,stroke:#424242
+    style T5 fill:#e0e0e0,stroke:#424242
+    style D1 fill:#bdbdbd,stroke:#212121
+    style D2 fill:#bdbdbd,stroke:#212121
+    style D3 fill:#bdbdbd,stroke:#212121
+    style D4 fill:#bdbdbd,stroke:#212121
 ```
 
 Requirements for agent observability:
 
 ```mermaid
 graph LR
-    subgraph OBS[""]
-        O1["Full step traces<br/>every LLM call, tool call, decision"]
-        O2["Cost attribution<br/>cost per step, per tool, per request"]
-        O3["Replay capability<br/>re-run with same inputs to reproduce"]
-        O4["Comparison views<br/>diff two runs of same input"]
-        O5["Anomaly detection<br/>flag unusual step counts, costs, paths"]
-    end
+    O1["Full step traces<br/>every LLM call, tool call, decision"] --> O2["Cost attribution<br/>cost per step, per tool, per request"] --> O3["Replay capability<br/>re-run with same inputs"] --> O4["Comparison views<br/>diff two runs of same input"] --> O5["Anomaly detection<br/>flag unusual step counts, costs"]
 
-    style OBS fill:#e0e0e0,stroke:#424242
+    style O1 fill:#f5f5f5,stroke:#616161
+    style O2 fill:#e0e0e0,stroke:#424242
+    style O3 fill:#bdbdbd,stroke:#212121
+    style O4 fill:#9e9e9e,stroke:#000,color:#fff
+    style O5 fill:#616161,stroke:#000,color:#fff
 ```
 
 ---
@@ -302,15 +263,13 @@ graph LR
 ## 8. Trust and Accountability
 
 ```mermaid
-graph TD
-    subgraph TRUST["Trust Requirements"]
-        TR1["Explainability<br/>──────<br/>Why did the agent do X?<br/>Show reasoning chain"]
-        TR2["Auditability<br/>──────<br/>Complete log of actions<br/>Tamper-proof records"]
-        TR3["Accountability<br/>──────<br/>Who is responsible?<br/>The developer? The user? The model?"]
-        TR4["Compliance<br/>──────<br/>GDPR: right to explanation<br/>SOX: audit trails<br/>HIPAA: data handling"]
-    end
+graph LR
+    TR1["Explainability<br/>──────<br/>Why did the agent do X?<br/>Show reasoning chain"] --> TR2["Auditability<br/>──────<br/>Complete log of actions<br/>Tamper-proof records"] --> TR3["Accountability<br/>──────<br/>Who is responsible?<br/>Developer? User? Model?"] --> TR4["Compliance<br/>──────<br/>GDPR: right to explanation<br/>SOX: audit trails<br/>HIPAA: data handling"]
 
-    style TRUST fill:#e0e0e0,stroke:#424242
+    style TR1 fill:#f5f5f5,stroke:#616161
+    style TR2 fill:#e0e0e0,stroke:#424242
+    style TR3 fill:#bdbdbd,stroke:#212121
+    style TR4 fill:#9e9e9e,stroke:#000,color:#fff
 ```
 
 ---
@@ -320,27 +279,19 @@ graph TD
 ```mermaid
 graph LR
     subgraph SOLVED["Mostly Solved"]
-        S1["Basic tool calling"]
-        S2["Single-step reflection"]
-        S3["Prompt chaining"]
+        S1["Basic tool calling"] --> S2["Single-step reflection"] --> S3["Prompt chaining"]
     end
 
     subgraph PROGRESS["Active Progress"]
-        P1["Multi-agent coordination"]
-        P2["Cost optimization"]
-        P3["Streaming UIs"]
-        P4["Observability tooling"]
+        P1["Multi-agent coordination"] --> P2["Cost optimization"] --> P3["Streaming UIs"] --> P4["Observability tooling"]
     end
 
     subgraph OPEN["Wide Open"]
-        O1["Long-horizon memory"]
-        O2["Agent evaluation standards"]
-        O3["Safety guarantees"]
-        O4["Agent-to-agent trust"]
-        O5["Regulatory frameworks"]
+        O1a["Long-horizon memory"] --> O2a["Evaluation standards"] --> O3a["Safety guarantees"] --> O4a["Agent-to-agent trust"]
     end
 
-    SOLVED --> PROGRESS --> OPEN
+    S3 --> P1
+    P4 --> O1a
 
     style SOLVED fill:#f5f5f5,stroke:#616161
     style PROGRESS fill:#e0e0e0,stroke:#424242

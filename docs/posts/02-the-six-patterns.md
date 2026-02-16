@@ -13,16 +13,13 @@ description: Chaining, Routing, Reflection, Tool Use, Planning, and Multi-Agent 
 ```mermaid
 graph TB
     subgraph SIMPLE["Lower Complexity"]
-        P1["CHAINING<br/>A then B then C"]
-        P2["ROUTING<br/>Classify, dispatch"]
+        P1["CHAINING<br/>A then B then C"] --- P2["ROUTING<br/>Classify, dispatch"]
     end
     subgraph MODERATE["Moderate Complexity"]
-        P3["REFLECTION<br/>Generate, critique, rewrite"]
-        P4["TOOL USE<br/>Call external APIs/code"]
+        P3["REFLECTION<br/>Generate, critique, rewrite"] --- P4["TOOL USE<br/>Call external APIs/code"]
     end
     subgraph ADVANCED["Higher Complexity"]
-        P5["PLANNING<br/>Orchestrator delegates dynamically"]
-        P6["MULTI-AGENT<br/>Team of specialized agents"]
+        P5["PLANNING<br/>Orchestrator delegates dynamically"] --- P6["MULTI-AGENT<br/>Team of specialized agents"]
     end
 
     SIMPLE --> MODERATE --> ADVANCED
