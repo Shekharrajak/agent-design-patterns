@@ -27,6 +27,7 @@ theme:
     - navigation.expand
     - navigation.top
     - toc.integrate
+    - navigation.footer
     - content.code.copy
   icon:
     repo: fontawesome/brands/github
