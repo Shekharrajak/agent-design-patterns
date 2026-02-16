@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shekharrajak.github.io/agent-design-patterns/sitemap.xml
